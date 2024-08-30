@@ -1,0 +1,238 @@
+/* General Background for the Entire Dashboard */
+body {
+    background-color: #fcd72b; /* Light background color from the palette */
+    color: #000000; /* Default text color for the dashboard */
+    font-family: 'Roboto', sans-serif; /* Ensure consistent font throughout */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General Background for Login Wrapper */
+
+
+html .login-wrapper {
+    background-color: #F4F8E6; /* Ensure consistent background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%; /* Ensure it takes full width */
+}
+
+/* Container for the Login Form */
+
+html .graph-sidebar-card,
+html .graph-content-card,
+html .strategies-sidebar-card,
+html .strategies-content-card,
+html .navbar-custom {
+    background-color: #FFFFFF; /* White background for all cards and navbar */
+    border-radius: 10px; /* Rounded corners for all cards and navbar */
+    padding: 40px; /* Increased padding inside the container */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); /* Shadow effect using the dark color */
+    transition: all 0.3s ease-in-out; /* Smooth resizing and color transitions */
+}
+
+html .login-container {
+    background-color: #FFFFFF; /* White background */
+    border-radius: 10px; /* Rounded corners */
+    padding: 40px; /* Padding inside the container */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); /* Shadow effect */
+    transition: all 0.3s ease-in-out; /* Smooth transition */
+    width: 100%; /* Full width of its parent container */
+    max-width: 400px; /* Maximum width for the login container */
+}
+
+html .card-header {
+    background-color: transparent; /* Remove the background color */
+    box-shadow: none; /* Remove any shadow */
+    border: none; /* Remove the border */
+    padding: 0; /* Remove padding to ensure no extra space */
+    margin: 0; /* Remove any margin */
+}
+
+/* Header Styling for Login and Section Headers */
+html .login-header,
+html .section-header {
+    font-weight: bold; /* Bold font */
+    color: #172749; /* Dark text color from the palette */
+    font-size: 24px; /* Consistent font size for headers */
+    border: #B23971;
+}
+
+/* Label Styling for Forms */
+html .login-label,
+html .form-label {
+    font-weight: bold; /* Bold labels */
+    color: #333333; /* Slightly darker text color for contrast */
+    margin-bottom: 10px; /* Space below labels */
+}
+
+/* Input Styling for Login and Other Forms */
+html .login-input,
+html .input-field,
+html .dropdown {
+    position: relative;
+    cursor: text;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 0 16px;
+    height: 48px;
+    background-color: #fff;
+    border: 1px solid #d6d6e7;
+    border-radius: 3px;
+    color: rgb(35, 38, 59);
+    box-shadow: inset 0 1px 4px 0 rgb(119 122 175 / 30%);
+    overflow: hidden;
+    transition: all 100ms ease-in-out;
+}
+
+html .login-input:focus,
+html .input-field:focus,
+html .dropdown:focus {
+    border-color: #6BC9A4; /* Accent color for input focus */
+    box-shadow: 0 0 8px rgba(107, 201, 164, 0.5); /* Accent shadow on focus */
+}
+
+html .Select-control {
+    background-color: transparent;
+}
+
+/* Button Styling for Login and Other Actions */
+html .login-button,
+html .action-button,
+html .submit-button {
+    display: inline-block;
+    outline: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+    background: #FFD814;
+    border: 1px solid #FCD200;
+    font-size: 16px;
+    height: 31px;
+    padding: 0 11px;
+    text-align: center;
+    width: 100%;
+    min-width: 200px;
+    font-weight: 500;
+    color: #0F1111;
+}
+
+html .login-button:hover,
+html .action-button:hover,
+html .submit-button:hover {
+    background: #F7CA00;
+    border-color: #F2C200;
+    box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+}
+
+/* Navbar Customizations */
+html .navbar-custom {
+    background-color: #FFFFFF !important; /* White background for navbar */
+    color: #172749; /* Dark text color for better contrast */
+    border-radius: 10px; /* Rounded border to match the rest of the design */
+    padding: 20px; /* Padding inside the navbar */
+    margin-top: 10px; /* Space at the top */
+    margin-left: 15px; /* Space on the left */
+    margin-right: 15px; /* Space on the right */
+    box-shadow: -10px 8px 0px rgb(196 181 253); /* Consistent shadow effect */
+}
+
+/* Navbar Brand and Link Styling */
+html .navbar-brand-custom {
+    color: #172749 !important; /* Dark color for the brand */
+    font-weight: bold; /* Make the brand name stand out */
+    font-size: 24px; /* Larger font for branding */
+}
+
+html .nav-link-custom {
+    color: #172749 !important; /* Dark color for nav links */
+    font-size: 18px;
+    position: relative;
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+html .nav-link-custom:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: #6BC9A4; /* Light Cyan for hover effect */
+    border-radius: 12px;
+    transition: all 0.4s ease;
+}
+
+html .nav-link-custom:hover:before {
+    width: 100%;
+}
+
+/* Login Message Styling */
+html .login-message,
+html .submit-message {
+    font-size: 14px; /* Consistent text size */
+    color: #B23971; /* Error color from the palette */
+    text-align: center; /* Center the message */
+}
+
+/* Checklist Customizations */
+html .checklist-container .custom-control-label {
+    color: #172749; /* Text color for checklist label */
+}
+
+/* Spacing and Alignment */
+html .spacing-between-columns .col {
+    padding-right: 15px; /* Consistent spacing between columns */
+    padding-left: 15px;  /* Consistent spacing between columns */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    html .login-container {
+        width: 90%; /* Adjust width on smaller screens */
+        max-width: none; /* Remove max-width constraint on small screens */
+    }
+
+    .navbar-custom {
+        padding: 10px;
+    }
+
+    .navbar-brand-custom {
+        font-size: 20px;
+    }
+
+    .nav-link-custom {
+        font-size: 16px;
+        padding: 8px 15px;
+    }
+
+    .strategies-sidebar-card,
+    .strategies-content-card {
+        margin-bottom: 20px; /* Add space below cards on small screens */
+    }
+}
+
+/* Dropdown Customizations */
+html .dropdown-menu {
+    display: block; /* Ensure dropdown is displayed */
+    visibility: visible; /* Ensure dropdown is visible */
+    opacity: 1; /* Ensure dropdown is fully opaque */
+    position: absolute; /* Ensure correct positioning */
+    z-index: 1050; /* Ensure it is above other elements */
+    background-color: #fff; /* White background for dropdown */
+    border: 1px solid #d6d6e7; /* Border to match input styling */
+    border-radius: 3px; /* Match input border radius */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Subtle shadow for dropdown */
+}
+
+html .dropdown-menu.show {
+    display: block; /* Ensure dropdown is shown when active */
+}
+
+html .dropdown {
+    overflow: visible; /* Ensure dropdown is not clipped */
+}
