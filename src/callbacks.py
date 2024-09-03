@@ -10,30 +10,44 @@ def register_callbacks(app, layouts, auth):
     @app.callback(
         [Output("page-content", "children"),
          Output("navbar-container", "children")],
-        Input("url", "pathname"),
+        [Input("url", "pathname")],
         prevent_initial_call=True
     )
     def display_page(pathname):
+        logged_in = 'logged_in' in session
+
         if pathname == "/strategies":
-            return layouts.strategies, layouts.navbar if 'logged_in' in session else None
+            if logged_in:
+                return layouts.strategies, layouts.navbar
+            else:
+                return dcc.Location(pathname='/login', id='redirect'), None
+
         if pathname == "/trades":
-            return layouts.graphs, layouts.navbar if 'logged_in' in session else None
+            if logged_in:
+                return layouts.graphs, layouts.navbar
+            else:
+                return dcc.Location(pathname='/login', id='redirect'), None
+
         elif pathname == "/login":
-            auth.logout_user()
-            return layouts.login, None
+            if logged_in:
+                return dcc.Location(pathname="/trades", id="redirect"), None
+            else:
+                return layouts.login, None
+
         elif pathname == "/":
-            if 'logged_in' in session:
+            if logged_in:
                 return layouts.graphs, layouts.navbar
             else:
                 return layouts.login, None
+
         else:
             return "404 Page Not Found", None
 
     @app.callback(
         Output("login-message", "children"),
-        Input("login-button", "n_clicks"),
-        State("login-username", "value"),
-        State("login-password", "value")
+        [Input("login-button", "n_clicks")],
+        [State("login-username", "value"),
+         State("login-password", "value")]
     )
     def login(n_clicks, username, password):
         if n_clicks:
@@ -42,7 +56,7 @@ def register_callbacks(app, layouts, auth):
             else:
                 return "Invalid username or password"
 
-    def update_figure_sync(n_intervals):
+    def update_figure_sync(n_intervals, symbol):
         url = "http://18.183.148.123:8000/data/get_data_by_range"
         headers = {
             'accept': 'application/json',
@@ -50,13 +64,13 @@ def register_callbacks(app, layouts, auth):
         }
 
         end_time = datetime.utcnow()
-        start_time = end_time - timedelta(days=1)
+        start_time = end_time - timedelta(days=5)
 
         end_time_iso = end_time.isoformat() + 'Z'
         start_time_iso = start_time.isoformat() + 'Z'
 
         payload = {
-            "symbol": "NVDA",
+            "symbol": symbol,
             "start_time": start_time_iso,
             "end_time": end_time_iso,
             "return_vwap": True,
@@ -66,7 +80,9 @@ def register_callbacks(app, layouts, auth):
 
         with httpx.Client() as client:
             try:
+
                 response = client.post(url, headers=headers, json=payload)
+
                 response.raise_for_status()
                 data = response.json()
 
@@ -81,6 +97,8 @@ def register_callbacks(app, layouts, auth):
                 df['low'] = df['low'].astype(float)
                 df['close'] = df['close'].astype(float)
 
+                df['rsi'] = df['rsi'].astype(float)
+
                 candles = go.Figure(
                     data=[
                         go.Candlestick(
@@ -90,7 +108,8 @@ def register_callbacks(app, layouts, auth):
                             low=df['low'],
                             close=df['close']
                         )
-                    ]
+                    ],
+
                 )
 
                 candles.update_xaxes(
@@ -108,15 +127,17 @@ def register_callbacks(app, layouts, auth):
                             x=[close_time, close_time],
                             y=[df['low'].min(), df['high'].max()],
                             mode='lines',
-                            line=dict(color='red', width=1, dash='dash'),
+                            line=dict(color='red', width=3, dash='dash'),
                             name='Market Close'
                         )
                     )
 
                 y_range = [df['low'].min() - (df['high'].max() - df['low'].min()) * 0.1,
                            df['high'].max() + (df['high'].max() - df['low'].min()) * 0.1]
+
                 candles.update_layout(
-                    height=400,
+
+                    height=800,
                     template="plotly_dark",
                     transition_duration=500,
                     title='Stock Analysis',
@@ -125,55 +146,96 @@ def register_callbacks(app, layouts, auth):
                         range=y_range,
                         gridcolor='gray',
                         gridwidth=0.5
-                    )
+                    ),
+                    uirevision=True,
+
                 )
 
                 if "sma" in df.columns:
-                    candles.add_trace(
-                        go.Scatter(
-                            x=df['timestamp'],
-                            y=df['sma'],
-                            mode='lines',
-                            line=dict(color='blue', width=2),
-                            name='SMA'
+                    sma_filtered = df.loc[(df['sma'].notnull()) & (df['sma'] != 0)]
+                    if not sma_filtered.empty:
+                        candles.add_trace(
+                            go.Scatter(
+                                x=sma_filtered['timestamp'],
+                                y=sma_filtered['sma'],
+                                mode='lines',
+                                line=dict(color='blue', width=2),
+                                name='SMA'
+                            )
                         )
-                    )
 
                 if "vwap" in df.columns:
-                    candles.add_trace(
+                    vwap_filtered = df.loc[(df['vwap'].notnull()) & (df['vwap'] != 0)]
+                    if not vwap_filtered.empty:
+                        candles.add_trace(
+                            go.Scatter(
+                                x=vwap_filtered['timestamp'],
+                                y=vwap_filtered['vwap'],
+                                mode='lines',
+                                line=dict(color='orange', width=2),
+                                name='VWAP'
+                            )
+                        )
+
+                rsi_chart = go.Figure(
+                    data=[
                         go.Scatter(
                             x=df['timestamp'],
-                            y=df['vwap'],
+                            y=df['rsi'],
                             mode='lines',
-                            line=dict(color='orange', width=2),
-                            name='VWAP'
+                            line=dict(color='purple', width=2),
+                            name='RSI'
                         )
-                    )
+                    ]
+
+                )
+
+                rsi_chart.update_xaxes(
+                    rangeslider_visible=False,
+                    rangebreaks=[
+                        dict(bounds=["sat", "mon"]),
+                        dict(bounds=[20, 13.5], pattern="hour")
+                    ]
+                )
+
+                rsi_chart.update_layout(
+                    height=400,
+                    template="plotly_dark",
+                    title='Relative Strength Index (RSI)',
+                    yaxis_title='RSI',
+                    xaxis_title='Timestamp',
+                    uirevision=True,
+                )
+                config = {'displaylogo': False}
+
 
             except httpx.RequestError as exc:
                 print(f"An error occurred while requesting data: {exc}")
-                return go.Figure()
+                return go.Figure(), go.Figure()
             except Exception as e:
                 print(f"An unexpected error occurred: {e}")
-                return go.Figure()
+                return go.Figure(), go.Figure()
 
-        return candles
+        return rsi_chart, candles
 
     @app.callback(
         Output('stored-figure-data', 'data'),
         Input("interval", "n_intervals"),
+        Input("symbol", "value"),
     )
-    def update_figure(n_intervals):
-        figure = update_figure_sync(n_intervals)
+    def update_figure(n_intervals, symbol):
+        figure = update_figure_sync(300, symbol)
+
         return figure
 
     @app.callback(
+        Output('rsi', "figure"),
         Output('candles', 'figure'),
         Input('stored-figure-data', 'data')
     )
     def display_stored_figure(stored_data):
         if stored_data is None:
-            return go.Figure()  # Return an empty figure if no data is stored
+            return go.Figure(), go.Figure
         return stored_data
 
     @app.callback(
@@ -181,6 +243,7 @@ def register_callbacks(app, layouts, auth):
         Input("algorithm-selector", "value"),
     )
     def update_strategy_parameters(selected_strategy):
+        layouts.load_data()
         return layouts.display_strategy_parameters(selected_strategy)
 
     @app.callback(
@@ -189,26 +252,35 @@ def register_callbacks(app, layouts, auth):
         prevent_initial_call=True
     )
     def update_take_profit_parameters(selected_tp_type):
+        layouts.load_data()
         return layouts.update_take_profit_parameters(selected_tp_type)
 
     @app.callback(
         Output("remove-message", "children"),
         Input("remove-algorithm", "n_clicks"),
-        Input("algorithm-selector", "value")
+        State("algorithm-selector", "value")
     )
     def delete_algorithm(n_clicks, value):
-        if n_clicks:
-            print('deleting algorithm')
+        if n_clicks is None or value is None:
+            return no_update
 
-            with httpx.Client() as client:
-                try:
-                    response = client.delete("http://18.183.148.123:8000/strategy/delete_strategy")
-                    if response.status_code == 200:
-                        return "Strategy deleted successfully!"
-                    else:
-                        return f"Failed to delete strategy. Status code: {response.status_code}"
-                except httpx.RequestError as e:
-                    return f"An error occurred: {str(e)}"
+        print(f'Deleting algorithm for symbol: {value}')
+
+        with httpx.Client() as client:
+            try:
+                response = client.request(
+                    "DELETE",
+                    "http://18.183.148.123:8000/strategy/delete_strategy",
+                    json={"symbol": value}  # Sending the request body as JSON
+                )
+                # Assuming layouts.load_data() refreshes the data after deletion
+                layouts.load_data()  # Make sure this function call is correct in your context
+                if response.status_code == 200:
+                    return "Strategy deleted successfully!"
+                else:
+                    return f"Failed to delete strategy. Status code: {response.status_code}"
+            except httpx.RequestError as e:
+                return f"An error occurred: {str(e)}"
 
         return no_update
 
@@ -282,9 +354,11 @@ def register_callbacks(app, layouts, auth):
             }
 
             with httpx.Client() as client:
+                print("submitting...")
                 try:
                     response = client.post("http://18.183.148.123:8000/strategy/create_strategy", json=data)
                     if response.status_code == 200:
+                        layouts.load_data()
                         return "Strategy submitted successfully!"
                     else:
                         return f"Failed to submit strategy. Status code: {response.status_code}"

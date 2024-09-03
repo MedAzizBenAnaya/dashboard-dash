@@ -9,8 +9,6 @@ body {
 }
 
 /* General Background for Login Wrapper */
-
-
 html .login-wrapper {
     background-color: #F4F8E6; /* Ensure consistent background color */
     display: flex;
@@ -21,7 +19,6 @@ html .login-wrapper {
 }
 
 /* Container for the Login Form */
-
 html .graph-sidebar-card,
 html .graph-content-card,
 html .strategies-sidebar-card,
@@ -30,35 +27,59 @@ html .navbar-custom {
     background-color: #FFFFFF; /* White background for all cards and navbar */
     border-radius: 10px; /* Rounded corners for all cards and navbar */
     padding: 40px; /* Increased padding inside the container */
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); /* Shadow effect using the dark color */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); /* Shadow effect using the dark color */
     transition: all 0.3s ease-in-out; /* Smooth resizing and color transitions */
 }
 
-html .login-container {
+/* Styling for the Login Card */
+html .login-card {
     background-color: #FFFFFF; /* White background */
     border-radius: 10px; /* Rounded corners */
-    padding: 40px; /* Padding inside the container */
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); /* Shadow effect */
+    padding: 20px; /* Reduced padding inside the container */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); /* Shadow effect */
     transition: all 0.3s ease-in-out; /* Smooth transition */
     width: 100%; /* Full width of its parent container */
-    max-width: 400px; /* Maximum width for the login container */
+    max-width: 400px; /* Maximum width for the login card */
+    min-width: 300px; /* Minimum width for the login card */
+    margin: 0 auto; /* Center card */
 }
 
-html .card-header {
-    background-color: transparent; /* Remove the background color */
-    box-shadow: none; /* Remove any shadow */
-    border: none; /* Remove the border */
-    padding: 0; /* Remove padding to ensure no extra space */
-    margin: 0; /* Remove any margin */
+/* Adjust Button Styling */
+html .login-button,
+html .action-button,
+html .submit-button {
+    display: block;
+    outline: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
+    background: #FFD814;
+    border: 1px solid #FCD200;
+    font-size: 16px;
+    height: 48px; /* Ensure consistent button height */
+    width: 100%; /* Ensure button takes the full width of its container */
+    font-weight: 500;
+    color: #0F1111;
+    margin-top: 20px; /* Add margin to separate from inputs */
+}
+
+html .login-button:hover,
+html .action-button:hover,
+html .submit-button:hover {
+    background: #F7CA00;
+    border-color: #F2C200;
+    box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
 }
 
 /* Header Styling for Login and Section Headers */
+html .card-header,
 html .login-header,
 html .section-header {
     font-weight: bold; /* Bold font */
     color: #172749; /* Dark text color from the palette */
     font-size: 24px; /* Consistent font size for headers */
     border: #B23971;
+    background: #FFFFFF;
 }
 
 /* Label Styling for Forms */
@@ -70,14 +91,25 @@ html .form-label {
 }
 
 /* Input Styling for Login and Other Forms */
+
+html .dash-dropdown {
+
+    font-size: 14px;
+    line-height: 20px;
+    padding: 0 0px;
+    height: 48px;
+    background-color: #fff;
+    border: none;
+    border-radius: 0px;
+}
+
 html .login-input,
 html .input-field,
-html .dropdown {
+html .Select-control{
     position: relative;
     cursor: text;
     font-size: 14px;
     line-height: 20px;
-    padding: 0 16px;
     height: 48px;
     background-color: #fff;
     border: 1px solid #d6d6e7;
@@ -86,6 +118,8 @@ html .dropdown {
     box-shadow: inset 0 1px 4px 0 rgb(119 122 175 / 30%);
     overflow: hidden;
     transition: all 100ms ease-in-out;
+
+    padding: 10px 16px 0;
 }
 
 html .login-input:focus,
@@ -93,39 +127,6 @@ html .input-field:focus,
 html .dropdown:focus {
     border-color: #6BC9A4; /* Accent color for input focus */
     box-shadow: 0 0 8px rgba(107, 201, 164, 0.5); /* Accent shadow on focus */
-}
-
-html .Select-control {
-    background-color: transparent;
-}
-
-/* Button Styling for Login and Other Actions */
-html .login-button,
-html .action-button,
-html .submit-button {
-    display: inline-block;
-    outline: 0;
-    cursor: pointer;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
-    background: #FFD814;
-    border: 1px solid #FCD200;
-    font-size: 16px;
-    height: 31px;
-    padding: 0 11px;
-    text-align: center;
-    width: 100%;
-    min-width: 200px;
-    font-weight: 500;
-    color: #0F1111;
-}
-
-html .login-button:hover,
-html .action-button:hover,
-html .submit-button:hover {
-    background: #F7CA00;
-    border-color: #F2C200;
-    box-shadow: 0 2px 5px 0 rgb(213 217 217 / 50%);
 }
 
 /* Navbar Customizations */
@@ -180,34 +181,43 @@ html .submit-message {
 }
 
 /* Checklist Customizations */
-html .checklist-container .custom-control-label {
+html .input-field.checklist-container .custom-control-label {
     color: #172749; /* Text color for checklist label */
+
 }
 
 /* Spacing and Alignment */
 html .spacing-between-columns .col {
     padding-right: 15px; /* Consistent spacing between columns */
-    padding-left: 15px;  /* Consistent spacing between columns */
+    padding-left: 15px; /* Consistent spacing between columns */
 }
 
-/* Responsive Design */
+/* Responsive Design Adjustments */
 @media (max-width: 768px) {
-    html .login-container {
+    html .login-card {
+        padding: 15px; /* Adjust padding on smaller screens */
         width: 90%; /* Adjust width on smaller screens */
-        max-width: none; /* Remove max-width constraint on small screens */
+        max-width: 90%; /* Max width for responsiveness */
+    }
+
+    html .login-button,
+    html .action-button,
+    html .submit-button {
+        height: 40px; /* Adjust button height on smaller screens */
+        font-size: 14px; /* Adjust font size on smaller screens */
     }
 
     .navbar-custom {
-        padding: 10px;
+        padding: 10px; /* Reduce padding on smaller screens */
     }
 
     .navbar-brand-custom {
-        font-size: 20px;
+        font-size: 20px; /* Adjust font size on smaller screens */
     }
 
     .nav-link-custom {
-        font-size: 16px;
-        padding: 8px 15px;
+        font-size: 16px; /* Adjust font size on smaller screens */
+        padding: 8px 15px; /* Adjust padding on smaller screens */
     }
 
     .strategies-sidebar-card,
@@ -224,9 +234,9 @@ html .dropdown-menu {
     position: absolute; /* Ensure correct positioning */
     z-index: 1050; /* Ensure it is above other elements */
     background-color: #fff; /* White background for dropdown */
-    border: 1px solid #d6d6e7; /* Border to match input styling */
-    border-radius: 3px; /* Match input border radius */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Subtle shadow for dropdown */
+    /*border: 1px solid #d6d6e7; !* Border to match input styling *!*/
+    /*border-radius: 3px; !* Match input border radius *!*/
+    /*box-shadow: 0 2px 5px rgba(0,0,0,0.15); !* Subtle shadow for dropdown *!*/
 }
 
 html .dropdown-menu.show {

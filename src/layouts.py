@@ -10,34 +10,36 @@ def login_layout():
         [
             dbc.Row(
                 dbc.Col(
-                    html.Div(
-                        [
-                            html.H2("Login", className="text-center mb-4 login-header"),
-                            dbc.Form(
-                                [
-                                    dbc.FormGroup(
-                                        [
-                                            dbc.Label("Username", className="login-label"),
-                                            dbc.Input(type="text", id="login-username",
-                                                      placeholder="Enter username", className="login-input"),
-                                        ]
-                                    ),
-                                    dbc.FormGroup(
-                                        [
-                                            dbc.Label("Password", className="login-label"),
-                                            dbc.Input(type="password", id="login-password",
-                                                      placeholder="Enter password", className="login-input"),
-                                        ]
-                                    ),
-                                    dbc.Button("Login", id="login-button", color="primary", block=True,
-                                               className="login-button"),
-                                    html.Div(id="login-message", className="text-center mt-3 login-message")
-                                ]
-                            ),
-                        ],
-                        className="login-container"
+                    dbc.Card(
+                        dbc.CardBody(
+                            [
+                                html.H2("Login", className="text-center mb-4 login-header"),
+                                dbc.Form(
+                                    [
+                                        dbc.FormGroup(
+                                            [
+                                                dbc.Label("Username", className="login-label"),
+                                                dbc.Input(type="text", id="login-username",
+                                                          placeholder="Enter username", className="login-input"),
+                                            ]
+                                        ),
+                                        dbc.FormGroup(
+                                            [
+                                                dbc.Label("Password", className="login-label"),
+                                                dbc.Input(type="password", id="login-password",
+                                                          placeholder="Enter password", className="login-input"),
+                                            ]
+                                        ),
+                                        dbc.Button("Login", id="login-button", color="primary", block=True,
+                                                   className="login-button"),
+                                        html.Div(id="login-message", className="text-center mt-3 login-message")
+                                    ]
+                                ),
+                            ]
+                        ),
+                        className="login-card"
                     ),
-                    width=12, lg=8, md=10, sm=12
+                    width=12, lg=6, md=8, sm=12
                 ),
                 justify="center"
             )
@@ -94,7 +96,7 @@ def graphs_layout(list_strategies_names):
                                             [
                                                 dbc.Label("Select Strategy", className="form-label"),
                                                 dcc.Dropdown(
-                                                    list_strategies_names, id="coin-select",
+                                                    list_strategies_names, id="symbol",
                                                     clearable=False, className="dropdown"
                                                 ),
                                             ]
@@ -110,8 +112,9 @@ def graphs_layout(list_strategies_names):
                     dbc.Col(
                         dbc.Card(
                             [
-                                dcc.Graph(id="candles", className="graph"),
-                                # dcc.Graph(id="indicator", className="graph"),
+
+                                dcc.Graph(id="candles", className="graph", style={'width': '100%', 'height': '800px'}),
+                                dcc.Graph(id="rsi", className="graph", config={'displaylogo': False}),
                             ],
                             className="graph-content-card"),
                         width=9,
@@ -137,20 +140,20 @@ def strategies_layout(list_strategies_names, list_assets):
                                 dbc.CardHeader(html.H5("Algorithm Actions", className="section-header")),
                                 dbc.CardBody(
                                     [
-                                        dbc.FormGroup(
-                                            [
-                                                dbc.Label("Select Algorithm", className="form-label"),
-                                                dcc.Dropdown(
-                                                    id="algorithm-selector",
-                                                    options=[{"label": name, "value": name} for name in
-                                                             list_strategies_names],
-                                                    placeholder="Select an algorithm",
-                                                    className="dropdown"
-                                                ),
-                                            ]
+
+                                        dbc.Label("Select Algorithm", className="form-label"),
+                                        dcc.Dropdown(
+                                            id="algorithm-selector",
+                                            options=[{"label": name, "value": name} for name in
+                                                     list_strategies_names],
+                                            placeholder="Select an algorithm",
+                                            className="dropdown"
                                         ),
+
                                         # Placeholder for dynamically updated strategy parameters
-                                        html.Div(id="selected-strategy-parameters-container", className="mt-4"),
+                                        dbc.Col([html.Div(id="selected-strategy-parameters-container",
+                                                          className="mt-4"), ]),
+
                                         # Action Buttons
                                         dbc.Button("Select Algorithm", id="add-algorithm", color="success",
                                                    className="action-button mt-4"),
@@ -172,57 +175,71 @@ def strategies_layout(list_strategies_names, list_assets):
                                 dbc.CardHeader(html.H5("Strategy Request", className="section-header")),
                                 dbc.CardBody(
                                     [
-                                        dbc.FormGroup(
-                                            [
-                                                dbc.Label("Symbol", className="form-label"),
-                                                dcc.Dropdown(id="symbol-selector",
-                                                             options=[{"label": asset, "value": asset} for asset in
-                                                                      list_assets],
-                                                             placeholder="Select symbol",
-                                                             className="dropdown"),
-                                            ]
-                                        ),
-                                        dbc.FormGroup(
-                                            [
-                                                dbc.Label("Minute Range", className="form-label"),
-                                                dbc.Input(type="number", id="minute-range", placeholder="e.g., 3",
-                                                          className="input-field"),
-                                            ]
-                                        ),
+                                        dbc.Row([
+                                            dbc.Col([
+                                                dbc.FormGroup(
+                                                    [
+                                                        dbc.Label("Symbol", className="form-label"),
+                                                        dcc.Dropdown(id="symbol-selector",
+                                                                     options=[{"label": asset, "value": asset} for asset
+                                                                              in
+                                                                              list_assets],
+                                                                     placeholder="Select symbol",
+                                                                     className="dropdown"),
+                                                    ]
+                                                ), ]),
+                                            dbc.Col([
+                                                dbc.FormGroup(
+                                                    [
+                                                        dbc.Label("Minute Range", className="form-label"),
+                                                        dbc.Input(type="number", id="minute-range",
+                                                                  placeholder="e.g., 3",
+                                                                  className="input-field"),
+                                                    ]
+                                                ), ]), ]),
+                                        dbc.Row([
+                                            dbc.Col([dbc.FormGroup(
+                                                [
+                                                    dbc.Label("Trade Inside Range Only", className="form-label"),
+                                                    dcc.Checklist(
+                                                        options=[{'label': html.Div(['Yes'],
+                                                                                    style={"padding-left": 10,
+                                                                                           'font-size': 15}),
+                                                                  'value': 'true'}],
+                                                        value=['true'],
+                                                        id="trade-inside-range-only",
+                                                        className="input-field checklist-container",
+                                                        labelStyle={"display": "flex", "align-items": "center"},
+                                                    ),
+                                                ]
+                                            ), ], width={"size": 3, "offset": 0}),
+                                        ]),
 
-                                        dbc.FormGroup(
-                                            [
-                                                dbc.Label("Trade Inside Range Only", className="form-label"),
-                                                dcc.Checklist(
-                                                    options=[{'label': 'Yes', 'value': 'true'}],
-                                                    value=['true'],
-                                                    id="trade-inside-range-only",
-                                                    className="input-field checklist-container"
-                                                ),
-                                            ]
-                                        ),
-                                        dbc.FormGroup(
-                                            [
-                                                dbc.Label("Max Trials Per Day", className="form-label"),
-                                                dbc.Input(type="number", id="max-trials-per-day", placeholder="e.g., 3",
-                                                          className="input-field"),
-                                            ]
-                                        ),
-                                        dbc.FormGroup(
-                                            [
-                                                dbc.Label("Risk Per Trade (%)", className="form-label"),
-                                                dbc.Input(type="number", id="risk-per-trade",
-                                                          placeholder="e.g., 0.0025",
-                                                          className="input-field"),
-                                            ]
-                                        ),
-                                        dbc.FormGroup(
-                                            [
-                                                dbc.Label("Stop Loss (%)", className="form-label"),
-                                                dbc.Input(type="number", id="stop-loss", placeholder="e.g., 0.4",
-                                                          className="input-field"),
-                                            ]
-                                        ),
+                                        dbc.Row([
+                                            dbc.Col([dbc.FormGroup(
+                                                [
+                                                    dbc.Label("Max Trials Per Day", className="form-label"),
+                                                    dbc.Input(type="number", id="max-trials-per-day",
+                                                              placeholder="e.g., 3",
+                                                              className="input-field"),
+                                                ],
+                                            ), ]),
+                                            dbc.Col([dbc.FormGroup(
+                                                [
+                                                    dbc.Label("Risk Per Trade (%)", className="form-label"),
+                                                    dbc.Input(type="number", id="risk-per-trade",
+                                                              placeholder="e.g., 0.0025",
+                                                              className="input-field"),
+                                                ]
+                                            ), ]),
+                                            dbc.Col([dbc.FormGroup(
+                                                [
+                                                    dbc.Label("Stop Loss (%)", className="form-label"),
+                                                    dbc.Input(type="number", id="stop-loss", placeholder="e.g., 0.4",
+                                                              className="input-field"),
+                                                ]
+                                            ), ]), ]),
+
                                         dbc.FormGroup(
                                             [
                                                 dbc.Label("Take Profit Type", className="form-label"),
@@ -240,7 +257,8 @@ def strategies_layout(list_strategies_names, list_assets):
                                                 ),
                                             ]
                                         ),
-                                        html.Div(id="take-profit-parameters-container"),
+                                        dbc.Col([html.Div(id="take-profit-parameters-container"), ]),
+
                                         # Submit Button placed last
                                         dbc.Button("Submit", id="submit-settings", color="success",
                                                    className="submit-button mt-3"),
@@ -269,9 +287,6 @@ class Layouts:
         self.list_strategies = []
         self.list_assets = []
         self.load_data()
-        # print(self.list_strategies_names)
-        # print(self.list_assets)
-        print(self.list_strategies)
 
         self.login = login_layout()
         self.navbar = navbar()
@@ -282,12 +297,13 @@ class Layouts:
         async with httpx.AsyncClient() as client:
             try:
                 strategies_response = await client.get("http://18.183.148.123:8000/strategy/list_strategies")
-                strategies_names_response = await client.get("http://18.183.148.123:8000/strategy/list_strategies_names")
+                strategies_names_response = await client.get(
+                    "http://18.183.148.123:8000/strategy/list_strategies_names")
                 assets_response = await client.get("http://18.183.148.123:8000/market/list_assets")
 
                 if strategies_names_response.status_code == 200:
                     try:
-                        self.list_strategies_names = strategies_names_response.json().get("strategies_names", [])
+                        self.list_strategies_names = strategies_names_response.json().get("strategy_names", [])
 
                     except ValueError as e:
                         logging.error(f"Failed to parse JSON for strategies names: {e}")
@@ -307,6 +323,12 @@ class Layouts:
                     except ValueError as e:
                         logging.error(f"Failed to parse JSON for strategies names: {e}")
                         self.list_strategies = []
+
+                print("strategies names")
+                print(self.list_strategies_names)
+
+                self.graphs = graphs_layout(self.list_strategies_names)
+                self.strategies = strategies_layout(self.list_strategies_names, self.list_assets)
 
             except httpx.RequestError as exc:
                 logging.error(f"An error occurred while requesting data: {exc}")
@@ -378,7 +400,13 @@ class Layouts:
 
         return html.Div()
 
+    def load_data(self):
+        asyncio.run(self.fetch_data())
+
     def display_strategy_parameters(self, selected_strategy):
+
+        self.load_data()
+
         if not selected_strategy:
             return "No strategy selected."
 
@@ -420,6 +448,3 @@ class Layouts:
 
         parameter_layout = generate_parameter_layout(strategy_parameters)
         return parameter_layout
-
-    def load_data(self):
-        asyncio.run(self.fetch_data())
