@@ -66,7 +66,7 @@ def navbar():
                 dbc.NavbarToggler(id="navbar-toggler"),
                 dbc.Collapse(
                     dbc.Nav(
-                        dbc.NavItem(dbc.NavLink("Logout", href="/login", className="nav-link-custom forward")),
+                        dbc.NavItem(dbc.NavLink("Logout", href="/logout", className="nav-link-custom forward")),
                         className="ml-auto",
                         navbar=True
                     ),

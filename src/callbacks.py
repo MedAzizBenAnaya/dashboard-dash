@@ -28,6 +28,10 @@ def register_callbacks(app, layouts, auth):
             else:
                 return dcc.Location(pathname='/login', id='redirect'), None
 
+        elif pathname == "/logout":
+            auth.logout_user()
+            return dcc.Location(pathname='/login', id='redirect'), None
+
         elif pathname == "/login":
             if logged_in:
                 return dcc.Location(pathname="/trades", id="redirect"), None
